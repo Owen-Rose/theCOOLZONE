@@ -1,0 +1,128 @@
+﻿@page "/flights"
+
+@using assignment2.Data
+@using System;
+@using System.IO;
+@using System.Collections.Generic;
+@using System.Linq;
+@using System.Text;
+@using System.Threading.Tasks;
+
+<h3>Flight Finder</h3>
+
+<form class="findFlights">
+    <div>
+        <p>From: </p>
+        <input placeholder="Any" id="from" />
+    </div>
+    <div>
+        <p>To: </p>
+        <input placeholder="Any" id="to" />
+    </div>
+    <div>
+        <p>Day: </p>
+        <input placeholder="Any" id="day" />
+    </div>
+    <p></p>
+    <button class="blueButton" @onclick=searchForFlights>Find flights</button>
+</form>
+
+<h3>Flights</h3>
+<form class="flights">
+    <select id="selectflight" name="flightselector">
+        @foreach (var flight in searchedFlights)
+        {
+            <option value="@flight.ToString()" placehoder="loading...">@flight.flightCode - @flight.airline - @flight.leavingAirport - @flight.destinationAirport - @flight.dayOfweek - @flight.time - @flight.seatNumber - @flight.price</option>
+            autoFillForm(flight);
+        }
+    </select>
+</form>
+
+<h3>Reserve</h3>
+<form>
+    <div>
+        <p>Flight Code: </p>
+        <input placeholder="Flight" disabled />
+    </div>
+    <div class="flex-column reserveFlights">
+        <p>Airline: </p>
+        <input placeholder="Airline" disabled />
+    </div>
+    <div>
+        <p>Day: </p>
+        <input placeholder="Day" disabled />
+    </div>
+    <div>
+        <p>Time: </p>
+        <input placeholder="Time" disabled />
+    </div>
+    <div>
+        <p>Cost: </p>
+        <input placeholder="0" disabled />
+    </div>
+    <div>
+        <p>Name: </p>
+        <input placeholder="Name" />
+    </div>
+    <div>
+        <p>Citizenship: </p>
+        <input placeholder="Citizenship" />
+    </div>
+    <div class="reserveButton">
+        <button class="blueButton">Reserve</button>
+    </div>
+</form>
+@code
+{
+
+    List<Flights1> flights = new List<Flights1>();
+    List<string> lines = new List<string>();
+
+    private void readingFlightsFile()
+    {
+        string fileName = @"C:\Users\adams\source\repos\MauiApp2test\MauiApp2test\Pages\flights.csv";
+        //string projectDirectory = Directory.GetCurrentDirectory();
+        //string filePath = Path.Combine(projectDirectory, fileName);
+        lines = File.ReadAllLines(fileName).ToList();
+
+        foreach (string line in lines)
+        {
+            string[] items = line.Split(',');
+            Flights1 flight = new Flights1(items[0], items[1], items[2], items[3], items[4], items[5], items[6], Convert.ToDouble(items[7]));
+            flights.Add(flight);
+        }
+    }
+
+    string param_1;
+    string param_2;
+    string param_3;
+    List<Flights1> searchedFlights = new List<Flights1>();
+
+    private void searchForFlights()
+    {
+
+        readingFlightsFile();
+
+        foreach (var flight in flights)
+        {
+            if (param_1 == flight.leavingAirport || param_2 == flight.destinationAirport || param_3 == flight.dayOfweek)
+            {
+                searchedFlights.Add(flight);
+            }
+
+        }
+    }
+
+    string param_4;
+    string param_5;
+    private string autoFillForm(Flights1 flight)
+    {
+        return
+        param_4 = flight.flightCode;
+    }
+
+
+
+
+
+}
